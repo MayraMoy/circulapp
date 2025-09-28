@@ -1,10 +1,13 @@
+// frontend/src/pages/Login.jsx
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -14,36 +17,63 @@ export default function Login() {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      alert('Error al iniciar sesión');
+      alert('Error al iniciar sesión. Verifica tus credenciales.');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 mb-4 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          className="w-full p-2 mb-4 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">Contraseña</label>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+              ) : (
+                <EyeIcon className="h-5 w-5 text-gray-500" />
+              )}
+            </button>
+          </div>
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
+          className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition"
         >
           Entrar
         </button>
+
+        <p className="text-center mt-4">
+          ¿No tienes cuenta?{' '}
+          <a href="/register" className="text-green-600 hover:underline">
+            Regístrate
+          </a>
+        </p>
       </form>
     </div>
   );
