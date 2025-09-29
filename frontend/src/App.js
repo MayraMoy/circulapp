@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/DashboardUsuario';
+import Dashboard from './pages/Dashboard';
 import PublishItem from './pages/PublishItem';
 import SearchItems from './pages/SearchItems';
 import Educational from './pages/Educational';
@@ -11,6 +11,10 @@ import ValidateMaterial from './pages/ValidateMaterial';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import ItemDetail from './pages/ItemDetail';
+import AgendaRecoleccion from './pages/AgendaRecoleccion';
+import ArchivoHistorico from './pages/ArchivoHistorico';
+import RateUserModal from './components/RateUserModal';
+
 
 function App() {
   return (
@@ -75,7 +79,34 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route 
+          path="/validate" 
+          element={
+            <ProtectedRoute allowedRoles={['gestor']}>
+              <ValidateMaterial />
+            </ProtectedRoute>} />
+          <Route
+            path="/agenda"
+            element={
+              <ProtectedRoute allowedRoles={['gestor']}>
+                <AgendaRecoleccion />
+              </ProtectedRoute>
+              }/>
+          <Route
+            path="/historial"
+            element={
+              <ProtectedRoute allowedRoles={['gestor']}>
+                <ArchivoHistorico />
+              </ProtectedRoute>}
+          />
+          <Route
+            path="/rate"
+            element={
+              <ProtectedRoute>
+                <RateUserModal />
+            </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to={localStorage.getItem('token') ? '/dashboard' : '/login'} replace />} />
         </Routes>
       </Router>

@@ -1,6 +1,6 @@
 // backend/src/routes/user.routes.js
 const express = require('express');
-const { getUserProfile } = require('../controllers/userController');
+const { getUserProfile, updateUserProfile } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
@@ -10,6 +10,7 @@ const router = express.Router();
  * @access  Privado
  */
 router.get('/:id', auth, getUserProfile);
+router.put('/profile', auth, updateUserProfile);
 
 // Puedes agregar más rutas aquí en el futuro:
 // - Calificar a otro usuario (POST /api/users/:id/rate)

@@ -1,6 +1,6 @@
 // backend/src/routes/item.routes.js
 const express = require('express');
-const { createItem, searchItems, getItemById } = require('../controllers/itemController');
+const { createItem, searchItems, getItemById, markAsBaled } = require('../controllers/itemController');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload'); // para subir imágenes (opcional en MVP)
 const deleteItem = require('../controllers/itemController').deleteItem;
@@ -29,5 +29,7 @@ router.get('/', auth, searchItems);
 router.get('/:id', auth, getItemById);
 
 router.delete('/:id', auth, deleteItem);
+
+router.patch('/:id/bale', auth, markAsBaled);
 
 module.exports = router;

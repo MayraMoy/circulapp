@@ -28,7 +28,7 @@ const ratingSchema = new mongoose.Schema({
     min: 1,
     max: 5
   },
-  standardCompliance: { // cumplimiento de estándares de procesamiento
+  standardCompliance: { // cumplimiento de estándares
     type: Number,
     min: 1,
     max: 5
@@ -39,7 +39,7 @@ const ratingSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Índice para evitar calificaciones duplicadas
+// Índice único: un usuario no puede calificar el mismo ítem dos veces
 ratingSchema.index({ itemId: 1, raterId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Rating', ratingSchema);
