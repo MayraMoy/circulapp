@@ -4,7 +4,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 
-// Componentes específicos por rol
+// Importa todos los dashboards
 import DashboardUsuario from './DashboardUsuario';
 import DashboardGestor from './DashboardGestor';
 import DashboardCoordinador from './DashboardCoordinador';
@@ -20,7 +20,7 @@ export default function Dashboard() {
     return null;
   }
 
-  // Renderizar dashboard según el rol
+  // Renderizar según el rol
   switch (user.role) {
     case 'user':
       return <DashboardUsuario />;
@@ -34,7 +34,7 @@ export default function Dashboard() {
       return (
         <Layout>
           <div className="max-w-4xl mx-auto py-12 text-center">
-            <p className="text-text-secondary">No se encontró un panel para tu rol.</p>
+            <p className="text-text-secondary">No se encontró un panel para tu rol: {user.role}</p>
           </div>
         </Layout>
       );

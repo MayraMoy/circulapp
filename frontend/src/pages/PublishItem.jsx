@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import API from '../services/Api';
 
 export default function PublishItem() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -28,6 +30,13 @@ export default function PublishItem() {
     { id: 'electronico', name: 'Electrónico' },
     { id: 'otro', name: 'Otro' }
   ];
+
+  useEffect(() => {
+    if (user && !user.phone) {
+      alert('Debes completar tu número de teléfono en el perfil para publicar.');
+      navigate('/profile');
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -150,6 +159,11 @@ export default function PublishItem() {
     e.preventDefault();
     if (!formData.title.trim()) return setError('El título es obligatorio.');
     if (!formData.lat || !formData.lng) return setError('Debes ingresar una dirección válida.');
+    if (!user.phone) {
+      alert('Debes completar tu número de teléfono en el perfil para publicar.');
+      navigate('/profile');
+      return;
+    }
 
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
