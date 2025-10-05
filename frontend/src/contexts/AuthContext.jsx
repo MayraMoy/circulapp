@@ -1,6 +1,6 @@
 // frontend/src/contexts/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
-import API from '../services/Api';
+import API from '../services/Api'; 
 
 export const AuthContext = createContext();
 
@@ -27,27 +27,37 @@ export const AuthProvider = ({ children }) => {
 
   // Iniciar sesión
   const login = async (email, password) => {
-    const res = await API.post('/auth/login', { email, password });
-    const { token, user: userData } = res.data;
-    
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    try {
+      const res = await API.post('/auth/login', { email, password });
+      const { token, user: userData } = res.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+    } catch (err) {
+      // ✅ Lanza el error para que el componente lo maneje
+      throw err;
+    }
   };
 
   // Registrarse
   const register = async (name, email, password) => {
-  const res = await API.post('/auth/register', { 
-    name, 
-    email, 
-    password, 
-    role: 'user' // ← ¡agrega esta línea!
-  });
-  const { token, user: userData } = res.data;
-  
-  localStorage.setItem('token', token);
-  localStorage.setItem('user', JSON.stringify(userData));
-  setUser(userData);
+    try {
+      const res = await API.post('/auth/register', { 
+        name, 
+        email, 
+        password, 
+        role: 'user'
+      });
+      const { token, user: userData } = res.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+    } catch (err) {
+      // ✅ Lanza el error para que el componente lo maneje
+      throw err;
+    }
   };
 
   // Cerrar sesión
@@ -57,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // ✅ Actualizar perfil en tiempo real (sin recargar)
+  // ✅ Actualizar perfil en tiempo real
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
