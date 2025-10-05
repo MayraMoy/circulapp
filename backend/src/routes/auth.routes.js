@@ -15,7 +15,20 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token, user: { id: user._id, name, email, role } });
+    
+    // ✅ SOLUCIÓN: Incluir TODOS los campos del usuario
+    res.status(201).json({ 
+      token, 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role,
+        phone: user.phone || '',
+        location: user.location || '',
+        bio: user.bio || ''
+      } 
+    });
   } catch (err) {
     res.status(500).json({ msg: 'Error en el servidor.' });
   }
@@ -32,7 +45,20 @@ router.post('/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: 'Credenciales incorrectas.' });
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, name: user.name, email, role: user.role } });
+    
+    // ✅ SOLUCIÓN: Incluir TODOS los campos del usuario
+    res.json({ 
+      token, 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role,
+        phone: user.phone || '',
+        location: user.location || '',
+        bio: user.bio || ''
+      } 
+    });
   } catch (err) {
     res.status(500).json({ msg: 'Error en el servidor.' });
   }
