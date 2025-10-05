@@ -17,8 +17,15 @@ const getUserProfile = async (req, res) => {
       ? (ratings.reduce((sum, r) => sum + (r.punctuality || 0), 0) / ratings.length).toFixed(1)
       : null;
 
+    // ✅ Incluir TODOS los campos del usuario en la respuesta
     res.json({
-      ...user.toObject(),
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone || '',
+      location: user.location || '',
+      bio: user.bio || '',
       ratings: {
         count: ratings.length,
         materialQuality: avgQuality,
@@ -53,11 +60,20 @@ const updateUserProfile = async (req, res) => {
       { new: true, runValidators: true, select: '-password' }
     );
 
-    res.json(updatedUser);
+    // ✅ Incluir TODOS los campos en la respuesta de actualización
+    res.json({
+      id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      phone: updatedUser.phone || '',
+      location: updatedUser.location || '',
+      bio: updatedUser.bio || ''
+    });
   } catch (err) {
     console.error('Error en updateUserProfile:', err);
     res.status(500).json({ msg: 'Error al actualizar el perfil.' });
   }
 };
-// Exporta ambas funciones
+
 module.exports = { getUserProfile, updateUserProfile };

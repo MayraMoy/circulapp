@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
-import API from '../services/Api';
+import API from '../services/Api'; 
 import { useNavigate } from 'react-router-dom';
 
 const isValidPhone = (phone) => {
@@ -45,7 +45,10 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUserItems = async () => {
-      if (!user) return;
+      if (!user || !user.id) { // ✅ Validación adicional
+        setLoading(false);
+        return;
+      }
       try {
         const res = await API.get(`/items?ownerId=${user.id}`);
         setMyItems(res.data);
@@ -60,7 +63,7 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      if (activeTab !== 'reviews' || !user) return;
+      if (activeTab !== 'reviews' || !user || !user.id) return; // ✅ Validación adicional
       setReviews(prev => ({ ...prev, loading: true }));
       try {
         const res = await API.get(`/ratings/user/${user.id}`);
@@ -116,7 +119,7 @@ export default function Profile() {
     <Layout>
       <div className="max-w-6xl mx-auto px-4">
         {/* Header del perfil con gradiente */}
-        <div className="bg-gradient-hero text-white p-8 rounded-2xl shadow-lg mb-8">
+        <div className="bg-gradient-to-r from-primary to-[#1ABC9C] text-white p-8 rounded-2xl shadow-lg mb-8">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="w-24 h-24 bg-white text-primary rounded-full flex items-center justify-center text-3xl font-bold shadow-xl ring-4 ring-primary-light">
               {user.name.charAt(0).toUpperCase()}
@@ -138,7 +141,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Pestañas modernas */}
+        {/* Pestañas */}
         <div className="bg-background-paper rounded-2xl shadow-md mb-6 overflow-hidden">
           <nav className="flex overflow-x-auto">
             {tabs.map(tab => (
